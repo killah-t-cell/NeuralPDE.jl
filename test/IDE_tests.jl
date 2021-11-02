@@ -111,7 +111,7 @@ discretization = NeuralPDE.PhysicsInformedNN(chain,
                                              )
 @named pde_system = PDESystem(eq,bcs,domains,[x,y],[u(x, y)])
 prob = NeuralPDE.discretize(pde_system,discretization)
-res = GalacticOptim.solve(prob, BFGS(); cb = cb, maxiters=100)
+res = GalacticOptim.solve(prob, BFGS(), maxiters=100)
 xs = 0.00:0.01:1.00
 ys = 0.00:0.01:1.00
 phi = discretization.phi
@@ -119,6 +119,19 @@ phi = discretization.phi
 u_real = collect(1 - x^2 - y^2 for y in ys, x in xs);
 u_predict = collect(Array(phi([x,y], res.minimizer))[1] for y in ys, x in xs);
 @test Flux.mse(u_real, u_predict) < 0.001
+
+(u, cord, phi, integrating_var_id, integrand_func) = (NeuralPDE.var"#278#279"(), Float32[0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0; 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.2 0.2 0.2 0.2 0.2 0.2 0.2 0.2 0.2 0.2 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.4 0.4 0.4 0.4 0.4 0.4 0.4 0.4 0.4 0.4 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.5 0.6 0.6 0.6 0.6 0.6 0.6 0.6 0.6 0.6 0.6 0.7 0.7 0.7 0.7 0.7 0.7 0.7 0.7 0.7 0.7 0.8 0.8 0.8 0.8 0.8 0.8 0.8 0.8 0.8 0.8 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 0.9 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0], NeuralPDE.var"#275#277"{UnionAll, Flux.var"#60#62"{Chain{Tuple{Dense{typeof(σ), Matrix{Float32}, Vector{Float32}}, Dense{typeof(identity), Matrix{Float32}, Vector{Float32}}}}}}(Array, Flux.var"#60#62"{Chain{Tuple{Dense{typeof(σ), Matrix{Float32}, Vector{Float32}}, Dense{typeof(identity), Matrix{Float32}, Vector{Float32}}}}}(Chain(Dense(2, 15, σ), Dense(15, 1)))), [1, 2], RuntimeGeneratedFunctions.RuntimeGeneratedFunction{(:cord, Symbol("##θ#257"), :phi, :derivative, :integral, :u, :p), NeuralPDE.var"#_RGF_ModTag", NeuralPDE.var"#_RGF_ModTag", (0xd5811f92, 0x648dd725, 0x789959bc, 0xc19d2c24, 0xc24f47b7)}(quote
+    #= /Users/gabrielbirnbaum/.julia/dev/NeuralPDE/src/pinns_pde_solve.jl:586 =#
+    #= /Users/gabrielbirnbaum/.julia/dev/NeuralPDE/src/pinns_pde_solve.jl:586 =#
+    begin
+        let (x, y) = (cord[[1], :], cord[[2], :])
+            begin
+                cord1 = vcat(x, y)
+            end
+            u(cord1, var"##θ#257", phi)
+        end
+    end
+end))
 
 # error_ = u_predict .- u_real
 # p1 = plot(xs,ys,u_real,linetype=:contourf,label = "analytic")
